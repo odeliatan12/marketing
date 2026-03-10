@@ -1,5 +1,7 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(
     title="AI Marketing Team API",
@@ -34,6 +36,12 @@ app.include_router(social_router, prefix="/api/agents", tags=["Social Media"])
 app.include_router(email_router, prefix="/api/agents", tags=["Email"])
 app.include_router(analytics_router, prefix="/api/agents", tags=["Analytics"])
 app.include_router(optimization_router, prefix="/api/agents", tags=["Optimization"])
+
+
+# Serve generated brand mockup images as static files
+_mockups_dir = os.path.join(os.path.dirname(__file__), "brand", "mockups")
+os.makedirs(_mockups_dir, exist_ok=True)
+app.mount("/brand-assets", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "brand")), name="brand-assets")
 
 
 @app.get("/")

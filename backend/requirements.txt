@@ -4,6 +4,7 @@ uvicorn==0.29.0
 
 # LLM
 anthropic==0.28.0
+openai==1.35.0
 
 # Web scraping
 playwright==1.44.0

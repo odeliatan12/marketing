@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   Palette, Type, MessageSquare, Target, Download,
-  AlertCircle, CheckCircle2, Sparkles, Eye, EyeOff, ArrowRight, Upload,
+  AlertCircle, CheckCircle2, Sparkles, Eye, EyeOff, ArrowRight, Upload, Check, Box,
 } from "lucide-react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -43,6 +43,7 @@ interface BrandFonts {
 interface BrandConfig {
   brand_name: string;
   tagline: string;
+  positioning_angle?: string;
   mission: string;
   vision: string;
   core_values: string[];
@@ -58,11 +59,13 @@ interface BrandConfig {
   one_liner: string;
   value_proposition: string;
   generated_at: string;
+  mockup_prompts?: Record<string, string>;
 }
 
 interface BrandingResult {
   brand_config: BrandConfig;
   brand_guide_preview: string;
+  mockup_images?: Record<string, string>;  // { key: "/brand-assets/mockups/..." }
 }
 
 // --- Sub-components ---
@@ -97,11 +100,10 @@ function ColorSwatch({ name, hex }: { name: string; hex: string }) {
     return (r * 299 + g * 587 + b * 114) / 1000 > 128;
   };
   const textColor = isLight(hex) ? "text-gray-800" : "text-white";
-
   return (
     <div className="flex flex-col gap-1.5">
       <div
-        className="w-full h-16 rounded-xl flex flex-col items-center justify-center shadow-sm border border-black/5"
+        className="w-full h-16 rounded-xl flex items-center justify-center shadow-sm border border-black/5"
         style={{ backgroundColor: hex }}
       >
         <span className={`text-xs font-bold ${textColor}`}>{hex.toUpperCase()}</span>
@@ -145,6 +147,67 @@ function VoiceList({ items, type }: { items: string[]; type: "do" | "dont" }) {
   );
 }
 
+function MockupPromptsSection({
+  mockups,
+  images,
+}: {
+  mockups: NonNullable<BrandConfig["mockup_prompts"]>;
+  images?: Record<string, string>;
+}) {
+  const [expandedKey, setExpandedKey] = useState<string | null>(null);
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {Object.entries(mockups).map(([key, prompt]) => {
+        if (!prompt) return null;
+        const label = key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+        const imageUrl = images?.[key];
+        const isExpanded = expandedKey === key;
+
+        return (
+          <div key={key} className="border border-gray-200 rounded-xl overflow-hidden bg-white hover:border-brand-200 hover:shadow-md transition-all">
+            {/* Image area */}
+            <div className="relative bg-gray-100 aspect-square">
+              {imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`http://localhost:8000${imageUrl}`}
+                  alt={label}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-gray-300 gap-2">
+                  <Box className="w-10 h-10" />
+                  <span className="text-xs text-gray-400">No image generated</span>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-3">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm font-semibold text-gray-800">{label}</p>
+                <CopyButton text={prompt} />
+              </div>
+              <button
+                onClick={() => setExpandedKey(isExpanded ? null : key)}
+                className="text-xs text-brand-600 hover:text-brand-700"
+              >
+                {isExpanded ? "Hide prompt" : "View prompt"}
+              </button>
+              {isExpanded && (
+                <p className="text-xs text-gray-500 mt-2 leading-relaxed bg-gray-50 rounded-lg p-2">
+                  {prompt}
+                </p>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function SectionHeader({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
   return (
     <div className="flex items-center gap-2 mb-4">
@@ -152,6 +215,88 @@ function SectionHeader({ icon: Icon, title }: { icon: React.ElementType; title: 
         <Icon className="w-3.5 h-3.5 text-brand-600" />
       </div>
       <h2 className="text-base font-semibold text-gray-800">{title}</h2>
+    </div>
+  );
+}
+
+// --- Option Card ---
+function OptionCard({
+  option, index, selected, onSelect,
+}: {
+  option: BrandConfig; index: number; selected: boolean; onSelect: () => void;
+}) {
+  const colors = option.colors ?? {};
+  const swatchKeys = ["primary", "secondary", "accent"] as const;
+
+  return (
+    <div
+      className={`relative rounded-xl border-2 transition-all cursor-pointer ${
+        selected
+          ? "border-brand-500 shadow-lg shadow-brand-100"
+          : "border-gray-200 hover:border-brand-300 hover:shadow-md"
+      }`}
+      onClick={onSelect}
+    >
+      {/* Selection indicator */}
+      <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+        selected ? "bg-brand-500 border-brand-500" : "border-gray-300 bg-white"
+      }`}>
+        {selected && <Check className="w-3.5 h-3.5 text-white" />}
+      </div>
+
+      {/* Color bar */}
+      <div className="h-2 rounded-t-xl overflow-hidden flex">
+        {swatchKeys.map((key) => (
+          <div key={key} className="flex-1" style={{ backgroundColor: colors[key] ?? "#ccc" }} />
+        ))}
+      </div>
+
+      <div className="p-5">
+        <div className="flex items-start gap-2 mb-1 pr-8">
+          <Badge label={`Option ${index + 1}`} variant="blue" />
+          <Badge label={option.personality_archetype} variant="purple" />
+        </div>
+
+        <h3 className="text-xl font-bold text-gray-900 mt-3">{option.brand_name}</h3>
+        <p className="text-sm text-gray-500 italic mt-0.5">"{option.tagline}"</p>
+
+        {option.positioning_angle && (
+          <p className="text-xs text-gray-600 mt-2 leading-relaxed border-l-2 border-brand-200 pl-2">
+            {option.positioning_angle}
+          </p>
+        )}
+
+        {/* Mini color palette */}
+        <div className="flex gap-2 mt-4">
+          {swatchKeys.map((key) => colors[key] && (
+            <div key={key} className="flex flex-col items-center gap-1">
+              <div
+                className="w-8 h-8 rounded-lg border border-black/5 shadow-sm"
+                style={{ backgroundColor: colors[key] }}
+                title={`${key}: ${colors[key]}`}
+              />
+              <span className="text-[10px] text-gray-400 capitalize">{key}</span>
+            </div>
+          ))}
+          <div className="flex flex-col items-center gap-1 ml-2">
+            <div className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center bg-gray-50">
+              <span className="text-[10px] font-bold text-gray-600" style={{ fontFamily: option.fonts?.heading }}>Aa</span>
+            </div>
+            <span className="text-[10px] text-gray-400 truncate max-w-[36px]">{option.fonts?.heading?.split(" ")[0]}</span>
+          </div>
+        </div>
+
+        {/* Tone tags */}
+        <div className="flex flex-wrap gap-1.5 mt-3">
+          {option.tone_adjectives?.slice(0, 4).map((adj) => (
+            <span key={adj} className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+              {adj}
+            </span>
+          ))}
+        </div>
+
+        <p className="text-xs text-gray-500 mt-3 leading-relaxed line-clamp-2">{option.one_liner}</p>
+      </div>
     </div>
   );
 }
@@ -165,7 +310,13 @@ export default function BrandingPage() {
     goals: "",
     vibe: "",
   });
+
+  // Step 1: form, Step 2: picking options, Step 3: full result
+  const [step, setStep] = useState<"form" | "options" | "result">("form");
+  const [options, setOptions] = useState<BrandConfig[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [result, setResult] = useState<BrandingResult | null>(null);
+  const [mockupImages, setMockupImages] = useState<Record<string, string>>({});
   const [showGuide, setShowGuide] = useState(false);
   const [prefilled, setPrefilled] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -184,14 +335,32 @@ export default function BrandingPage() {
     }
   }, []);
 
-  const mutation = useMutation({
+  // Mutation: get 3 options
+  const optionsMutation = useMutation({
     mutationFn: (data: BrandingRequest) =>
-      api.post("/branding", data).then((r) => r.data),
+      api.post("/branding/options", data).then((r) => r.data),
+    onSuccess: (data) => {
+      setOptions(data.options ?? []);
+      setSelectedIndex(0);
+      setStep("options");
+    },
+  });
+
+  // Mutation: confirm chosen option → generates guide
+  const confirmMutation = useMutation({
+    mutationFn: (brand: BrandConfig) =>
+      api.post("/branding/confirm", {
+        product_name: form.product_name,
+        target_audience: form.target_audience,
+        brand,
+      }).then((r) => r.data),
     onSuccess: (data) => {
       setResult(data);
+      setMockupImages(data.mockup_images ?? {});
       if (data?.brand_config?.brand_name) {
         setFlowContext({ brand_name: data.brand_config.brand_name });
       }
+      setStep("result");
     },
   });
 
@@ -235,7 +404,7 @@ export default function BrandingPage() {
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* Left: Form */}
+        {/* Left: Form / actions */}
         <div className="lg:col-span-1 space-y-4">
           <Card>
             <CardTitle>Brand Brief</CardTitle>
@@ -243,7 +412,7 @@ export default function BrandingPage() {
               {prefilled && (
                 <div className="flex items-center gap-2 text-xs text-brand-700 bg-brand-50 border border-brand-100 px-3 py-2 rounded-lg">
                   <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                  Pre-filled from Market Intelligence. Review and adjust if needed.
+                  Pre-filled from Market Intelligence.
                 </div>
               )}
               <FormInput label="Product Name" value={form.product_name}
@@ -269,7 +438,7 @@ export default function BrandingPage() {
               <div className="border border-dashed border-gray-200 rounded-lg p-3">
                 <p className="text-xs font-medium text-gray-600 mb-1.5">Market Intelligence Report</p>
                 <p className="text-xs text-gray-400 mb-2">
-                  Run Market Intelligence first — or upload a saved report (JSON) to use existing research.
+                  Run Market Intelligence first — or upload a saved report (JSON).
                 </p>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-xs font-medium text-gray-700">
@@ -287,54 +456,51 @@ export default function BrandingPage() {
                   />
                   {uploadStatus === "done" && (
                     <span className="flex items-center gap-1 text-xs text-green-600 font-medium">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Report loaded
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Loaded
                     </span>
                   )}
                   {uploadStatus === "error" && (
                     <span className="flex items-center gap-1 text-xs text-red-500">
-                      <AlertCircle className="w-3.5 h-3.5" /> Upload failed
+                      <AlertCircle className="w-3.5 h-3.5" /> Failed
                     </span>
                   )}
                 </label>
               </div>
 
               <Button
-                onClick={() => mutation.mutate(form)}
-                loading={mutation.isPending}
+                onClick={() => optionsMutation.mutate(form)}
+                loading={optionsMutation.isPending}
                 disabled={!form.product_name || !form.description}
                 className="w-full"
               >
                 <Sparkles className="w-4 h-4" />
-                {mutation.isPending ? "Generating..." : "Generate Brand Identity"}
+                {optionsMutation.isPending ? "Generating options..." : "Generate 3 Brand Options"}
               </Button>
 
-              {mutation.isError && (
+              {optionsMutation.isError && (
                 <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">
                   <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                   <span>
-                    {(mutation.error as any)?.response?.data?.detail
-                      ?? (mutation.error as any)?.message
-                      ?? "Branding failed. Check backend logs for details."}
+                    {(optionsMutation.error as any)?.response?.data?.detail
+                      ?? (optionsMutation.error as any)?.message
+                      ?? "Failed. Check backend logs."}
                   </span>
                 </div>
               )}
-              {mutation.isSuccess && (
-                <>
-                  <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 px-3 py-2 rounded-lg">
-                    <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                    Brand identity generated successfully.
-                  </div>
-                  <Link href="/research">
-                    <button className="w-full flex items-center justify-between px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-medium transition-colors">
-                      <span>Continue to Research</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </Link>
-                </>
+              {confirmMutation.isError && (
+                <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <span>
+                    {(confirmMutation.error as any)?.response?.data?.detail
+                      ?? (confirmMutation.error as any)?.message
+                      ?? "Failed to confirm brand."}
+                  </span>
+                </div>
               )}
             </div>
           </Card>
 
+          {/* Quick actions after result */}
           {brand && (
             <Card>
               <CardTitle>Quick Actions</CardTitle>
@@ -349,35 +515,90 @@ export default function BrandingPage() {
                 </Button>
                 <Button variant="secondary" className="w-full" onClick={handleSave}>
                   <Sparkles className="w-4 h-4" />
-                  {saved ? "Saved to Dashboard!" : "Save to Dashboard"}
+                  {saved ? "Saved!" : "Save to Dashboard"}
+                </Button>
+                <Button variant="secondary" className="w-full" onClick={() => { setStep("options"); setResult(null); }}>
+                  <ArrowRight className="w-4 h-4 rotate-180" />
+                  Back to Options
                 </Button>
               </div>
             </Card>
           )}
         </div>
 
-        {/* Right: Brand Identity */}
+        {/* Right: Main content area */}
         <div className="lg:col-span-2 space-y-6">
 
-          {!brand && !mutation.isPending && (
+          {/* STEP: empty state */}
+          {step === "form" && !optionsMutation.isPending && (
             <div className="flex flex-col items-center justify-center h-64 rounded-xl border-2 border-dashed border-gray-200 text-gray-400">
               <Palette className="w-10 h-10 mb-3 text-gray-300" />
-              <p className="text-sm font-medium">Your brand identity will appear here</p>
+              <p className="text-sm font-medium">3 brand concepts will appear here</p>
               <p className="text-xs mt-1">Fill in the form and click Generate</p>
             </div>
           )}
 
-          {mutation.isPending && (
+          {/* STEP: loading options */}
+          {optionsMutation.isPending && (
             <div className="flex flex-col items-center justify-center h-64 rounded-xl border border-gray-200 bg-white">
               <div className="animate-spin w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full mb-4" />
-              <p className="text-sm font-medium text-gray-600">Generating your brand identity...</p>
-              <p className="text-xs mt-1 text-gray-400">Reading market research and crafting your brand</p>
+              <p className="text-sm font-medium text-gray-600">Generating 3 brand concepts...</p>
+              <p className="text-xs mt-1 text-gray-400">Reading market research — usually under 60 seconds</p>
             </div>
           )}
 
-          {brand && (
+          {/* STEP: pick an option */}
+          {step === "options" && options.length > 0 && (
             <>
-              {/* Hero: Brand name + tagline */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-base font-semibold text-gray-800">Choose a Brand Direction</h2>
+                  <p className="text-xs text-gray-500 mt-0.5">Each concept has a different personality, visual style, and positioning angle.</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                {options.map((opt, i) => (
+                  <OptionCard
+                    key={i}
+                    option={opt}
+                    index={i}
+                    selected={selectedIndex === i}
+                    onSelect={() => setSelectedIndex(i)}
+                  />
+                ))}
+              </div>
+
+              <Button
+                onClick={() => {
+                  if (selectedIndex !== null) confirmMutation.mutate(options[selectedIndex]);
+                }}
+                loading={confirmMutation.isPending}
+                disabled={selectedIndex === null}
+                className="w-full"
+              >
+                {confirmMutation.isPending ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Generating full brand guide...
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Select Option {selectedIndex !== null ? selectedIndex + 1 : ""} & Generate Brand Guide
+                  </>
+                )}
+              </Button>
+              {confirmMutation.isPending && (
+                <p className="text-xs text-center text-gray-400">Writing brand guide + generating mockup images with DALL-E 3 — usually 60-90 seconds</p>
+              )}
+            </>
+          )}
+
+          {/* STEP: full brand result */}
+          {step === "result" && brand && (
+            <>
+              {/* Hero */}
               <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 text-white">
                 <div className="flex items-start justify-between mb-1">
                   <Badge label={brand.personality_archetype} variant="blue" />
@@ -395,7 +616,7 @@ export default function BrandingPage() {
                 </div>
               </Card>
 
-              {/* Mission, Vision, Values */}
+              {/* Mission / Vision / Values */}
               <Card>
                 <SectionHeader icon={Target} title="Mission, Vision & Values" />
                 <div className="space-y-3">
@@ -490,9 +711,36 @@ export default function BrandingPage() {
                   </div>
                 </div>
                 <p className="text-xs text-gray-400 mt-2">
-                  Paste this prompt into DALL-E, Midjourney, or Stable Diffusion to generate logo concepts.
+                  Paste into DALL-E, Midjourney, or Stable Diffusion to generate logo concepts.
                 </p>
               </Card>
+
+              {/* Visual Mockups */}
+              {brand.mockup_prompts && Object.keys(brand.mockup_prompts).length > 0 && (
+                <Card>
+                  <SectionHeader icon={Box} title="Product Placement & Packaging Mockups" />
+                  <p className="text-xs text-gray-500 mb-4 -mt-2">
+                    {Object.keys(mockupImages).length > 0
+                      ? `${Object.keys(mockupImages).length} mockup images generated with DALL-E 3. Click "View prompt" to see the prompt used.`
+                      : "Add your OpenAI API key to auto-generate photorealistic mockups with DALL-E 3."}
+                  </p>
+                  <MockupPromptsSection mockups={brand.mockup_prompts} images={mockupImages} />
+                </Card>
+              )}
+
+              {/* Visual Mockups — also show in options result if present */}
+
+              {/* Success + next step */}
+              <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 px-3 py-2 rounded-lg">
+                <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                Brand identity saved. Ready for the next step.
+              </div>
+              <Link href="/research">
+                <button className="w-full flex items-center justify-between px-4 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-medium transition-colors">
+                  <span>Continue to Research</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
 
               {/* Brand Guide preview */}
               {showGuide && result?.brand_guide_preview && (
