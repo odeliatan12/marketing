@@ -1,0 +1,404 @@
+{
+  "generated_at": "2026-03-09T14:32:08.495759",
+  "period_days": 7,
+  "dry_run": true,
+  "raw_metrics": {
+    "twitter": [
+      {
+        "platform": "twitter",
+        "post_id": "mock_001",
+        "date": "2026-03-09",
+        "topic": "Mock tweet 0",
+        "impressions": 1200,
+        "reach": 900,
+        "likes": 45,
+        "comments": 8,
+        "shares": 12,
+        "clicks": 30,
+        "saves": 5,
+        "engagement_rate": 5.42
+      },
+      {
+        "platform": "twitter",
+        "post_id": "mock_001",
+        "date": "2026-03-08",
+        "topic": "Mock tweet 1",
+        "impressions": 1280,
+        "reach": 900,
+        "likes": 48,
+        "comments": 8,
+        "shares": 12,
+        "clicks": 30,
+        "saves": 5,
+        "engagement_rate": 5.31
+      },
+      {
+        "platform": "twitter",
+        "post_id": "mock_001",
+        "date": "2026-03-07",
+        "topic": "Mock tweet 2",
+        "impressions": 1360,
+        "reach": 900,
+        "likes": 51,
+        "comments": 8,
+        "shares": 12,
+        "clicks": 30,
+        "saves": 5,
+        "engagement_rate": 5.22
+      },
+      {
+        "platform": "twitter",
+        "post_id": "mock_001",
+        "date": "2026-03-06",
+        "topic": "Mock tweet 3",
+        "impressions": 1440,
+        "reach": 900,
+        "likes": 54,
+        "comments": 8,
+        "shares": 12,
+        "clicks": 30,
+        "saves": 5,
+        "engagement_rate": 5.14
+      },
+      {
+        "platform": "twitter",
+        "post_id": "mock_001",
+        "date": "2026-03-05",
+        "topic": "Mock tweet 4",
+        "impressions": 1520,
+        "reach": 900,
+        "likes": 57,
+        "comments": 8,
+        "shares": 12,
+        "clicks": 30,
+        "saves": 5,
+        "engagement_rate": 5.07
+      },
+      {
+        "platform": "twitter",
+        "post_id": "mock_001",
+        "date": "2026-03-04",
+        "topic": "Mock tweet 5",
+        "impressions": 1600,
+        "reach": 900,
+        "likes": 60,
+        "comments": 8,
+        "shares": 12,
+        "clicks": 30,
+        "saves": 5,
+        "engagement_rate": 5.0
+      },
+      {
+        "platform": "twitter",
+        "post_id": "mock_001",
+        "date": "2026-03-03",
+        "topic": "Mock tweet 6",
+        "impressions": 1680,
+        "reach": 900,
+        "likes": 63,
+        "comments": 8,
+        "shares": 12,
+        "clicks": 30,
+        "saves": 5,
+        "engagement_rate": 4.94
+      }
+    ],
+    "instagram": [
+      {
+        "platform": "instagram",
+        "post_id": "ig_mock_0",
+        "date": "2026-03-09",
+        "topic": "Mock IG post 0",
+        "impressions": 3500,
+        "reach": 2800,
+        "likes": 180,
+        "comments": 22,
+        "shares": 15,
+        "clicks": 60,
+        "saves": 45,
+        "engagement_rate": 7.49
+      },
+      {
+        "platform": "instagram",
+        "post_id": "ig_mock_1",
+        "date": "2026-03-08",
+        "topic": "Mock IG post 1",
+        "impressions": 3700,
+        "reach": 2800,
+        "likes": 190,
+        "comments": 22,
+        "shares": 15,
+        "clicks": 60,
+        "saves": 45,
+        "engagement_rate": 7.35
+      },
+      {
+        "platform": "instagram",
+        "post_id": "ig_mock_2",
+        "date": "2026-03-07",
+        "topic": "Mock IG post 2",
+        "impressions": 3900,
+        "reach": 2800,
+        "likes": 200,
+        "comments": 22,
+        "shares": 15,
+        "clicks": 60,
+        "saves": 45,
+        "engagement_rate": 7.23
+      },
+      {
+        "platform": "instagram",
+        "post_id": "ig_mock_3",
+        "date": "2026-03-06",
+        "topic": "Mock IG post 3",
+        "impressions": 4100,
+        "reach": 2800,
+        "likes": 210,
+        "comments": 22,
+        "shares": 15,
+        "clicks": 60,
+        "saves": 45,
+        "engagement_rate": 7.12
+      },
+      {
+        "platform": "instagram",
+        "post_id": "ig_mock_4",
+        "date": "2026-03-05",
+        "topic": "Mock IG post 4",
+        "impressions": 4300,
+        "reach": 2800,
+        "likes": 220,
+        "comments": 22,
+        "shares": 15,
+        "clicks": 60,
+        "saves": 45,
+        "engagement_rate": 7.02
+      },
+      {
+        "platform": "instagram",
+        "post_id": "ig_mock_5",
+        "date": "2026-03-04",
+        "topic": "Mock IG post 5",
+        "impressions": 4500,
+        "reach": 2800,
+        "likes": 230,
+        "comments": 22,
+        "shares": 15,
+        "clicks": 60,
+        "saves": 45,
+        "engagement_rate": 6.93
+      },
+      {
+        "platform": "instagram",
+        "post_id": "ig_mock_6",
+        "date": "2026-03-03",
+        "topic": "Mock IG post 6",
+        "impressions": 4700,
+        "reach": 2800,
+        "likes": 240,
+        "comments": 22,
+        "shares": 15,
+        "clicks": 60,
+        "saves": 45,
+        "engagement_rate": 6.85
+      }
+    ],
+    "linkedin": [
+      {
+        "platform": "linkedin",
+        "post_id": "li_mock_0",
+        "date": "2026-03-09",
+        "topic": "Mock LinkedIn post 0",
+        "impressions": 800,
+        "reach": 600,
+        "likes": 35,
+        "comments": 6,
+        "shares": 4,
+        "clicks": 25,
+        "saves": 0,
+        "engagement_rate": 5.62
+      },
+      {
+        "platform": "linkedin",
+        "post_id": "li_mock_1",
+        "date": "2026-03-08",
+        "topic": "Mock LinkedIn post 1",
+        "impressions": 850,
+        "reach": 600,
+        "likes": 37,
+        "comments": 6,
+        "shares": 4,
+        "clicks": 25,
+        "saves": 0,
+        "engagement_rate": 5.53
+      },
+      {
+        "platform": "linkedin",
+        "post_id": "li_mock_2",
+        "date": "2026-03-07",
+        "topic": "Mock LinkedIn post 2",
+        "impressions": 900,
+        "reach": 600,
+        "likes": 39,
+        "comments": 6,
+        "shares": 4,
+        "clicks": 25,
+        "saves": 0,
+        "engagement_rate": 5.44
+      },
+      {
+        "platform": "linkedin",
+        "post_id": "li_mock_3",
+        "date": "2026-03-06",
+        "topic": "Mock LinkedIn post 3",
+        "impressions": 950,
+        "reach": 600,
+        "likes": 41,
+        "comments": 6,
+        "shares": 4,
+        "clicks": 25,
+        "saves": 0,
+        "engagement_rate": 5.37
+      },
+      {
+        "platform": "linkedin",
+        "post_id": "li_mock_4",
+        "date": "2026-03-05",
+        "topic": "Mock LinkedIn post 4",
+        "impressions": 1000,
+        "reach": 600,
+        "likes": 43,
+        "comments": 6,
+        "shares": 4,
+        "clicks": 25,
+        "saves": 0,
+        "engagement_rate": 5.3
+      },
+      {
+        "platform": "linkedin",
+        "post_id": "li_mock_5",
+        "date": "2026-03-04",
+        "topic": "Mock LinkedIn post 5",
+        "impressions": 1050,
+        "reach": 600,
+        "likes": 45,
+        "comments": 6,
+        "shares": 4,
+        "clicks": 25,
+        "saves": 0,
+        "engagement_rate": 5.24
+      },
+      {
+        "platform": "linkedin",
+        "post_id": "li_mock_6",
+        "date": "2026-03-03",
+        "topic": "Mock LinkedIn post 6",
+        "impressions": 1100,
+        "reach": 600,
+        "likes": 47,
+        "comments": 6,
+        "shares": 4,
+        "clicks": 25,
+        "saves": 0,
+        "engagement_rate": 5.18
+      }
+    ],
+    "email": [
+      {
+        "campaign_id": "sg_mock_0",
+        "subject": "Mock email 0",
+        "date": "2026-03-09",
+        "sends": 500,
+        "opens": 180,
+        "clicks": 45,
+        "unsubscribes": 2,
+        "bounces": 5,
+        "open_rate": 36.0,
+        "click_rate": 9.0
+      },
+      {
+        "campaign_id": "sg_mock_1",
+        "subject": "Mock email 1",
+        "date": "2026-03-06",
+        "sends": 500,
+        "opens": 190,
+        "clicks": 48,
+        "unsubscribes": 2,
+        "bounces": 5,
+        "open_rate": 38.0,
+        "click_rate": 9.6
+      }
+    ]
+  },
+  "insights": {
+    "overall_health": "green",
+    "summary": "Campaign performance across social and email channels is strong, with Instagram consistently outperforming Twitter on engagement rate (avg ~7.35% vs ~5.16%) and email open rates averaging 37% \u2014 well above the industry benchmark of ~21%. While Twitter impressions are growing week-over-week, engagement rates show a gradual decline, suggesting content freshness or audience saturation may need to be addressed. Overall, the campaign is healthy with clear optimization opportunities.",
+    "top_performing_posts": [
+      {
+        "platform": "instagram",
+        "topic": "Mock IG post 0",
+        "why": "Highest engagement rate in the dataset at 7.49%, combined with strong saves (45) indicating high content value and shareability. Reached 2,800 unique users with 180 likes and 22 comments, reflecting strong audience resonance."
+      },
+      {
+        "platform": "instagram",
+        "topic": "Mock IG post 1",
+        "why": "Second-highest engagement rate at 7.35% with 190 likes, maintaining strong audience interaction despite higher impressions (3,700). Saves and comments remained consistent, signaling sustained content quality."
+      },
+      {
+        "platform": "twitter",
+        "topic": "Mock tweet 0",
+        "why": "Top-performing Twitter post with the highest engagement rate in the Twitter set at 5.42%, achieved with the lowest impression count (1,200), suggesting highly targeted or timely content delivery on March 9."
+      }
+    ],
+    "underperforming_posts": [
+      {
+        "platform": "twitter",
+        "topic": "Mock tweet 6",
+        "why": "Lowest engagement rate across all Twitter posts at 4.94%, with impressions rising to 1,680 but no corresponding increase in likes, comments, shares, or clicks \u2014 indicating audience exposure is growing but content is failing to convert attention into action.",
+        "recommendation": "Refresh tweet copy with stronger calls-to-action, incorporate trending hashtags or visual media (images/GIFs), and A/B test posting times to identify higher-engagement windows. Consider reducing posting frequency to preserve content quality."
+      },
+      {
+        "platform": "twitter",
+        "topic": "Mock tweet 5",
+        "why": "Engagement rate of 5.00% with 1,600 impressions shows a continued downward trend. Clicks and comments are flat at 30 and 8 respectively across multiple days, suggesting the content format has become repetitive and is losing audience interest.",
+        "recommendation": "Introduce content variety such as polls, threads, or short video clips to re-engage followers. Analyze the audience segment seeing these posts and consider targeted promoted tweets to break through organic reach plateaus."
+      },
+      {
+        "platform": "instagram",
+        "topic": "Mock IG post 3",
+        "why": "Although data is partially truncated, the pattern of rising impressions (4,100) with a likely declining engagement rate mirrors the Instagram trend seen across posts 0\u20132, suggesting diminishing returns on the current content format as the week progresses.",
+        "recommendation": "Rotate content formats \u2014 introduce Reels or carousel posts to boost algorithmic reach and re-engage passive followers. Test new visual styles or topic angles to sustain the higher engagement rates seen earlier in the week."
+      }
+    ],
+    "platform_insights": {
+      "twitter": {
+        "avg_engagement_rate": "5.16%",
+        "best_performing_format": "Short-form text tweets (based on available data)",
+        "insight": "Twitter shows a consistent inverse relationship between impressions and engagement rate \u2014 as impressions increase from 1,200 to 1,680 across the 7-day window, engagement rate declines steadily from 5.42% to 4.94%. Reach remains flat at 900 across all posts, indicating the growing impressions are driven by repeat exposures rather than new audience discovery. This suggests content fatigue among the existing audience and a need for format diversification or audience expansion strategies."
+      },
+      "instagram": {
+        "avg_engagement_rate": "7.35%",
+        "best_performing_format": "Standard feed posts with high save potential",
+        "insight": "Instagram significantly outperforms Twitter with an average engagement rate of ~7.35%, driven by strong save counts (45 per post) that suggest the content holds lasting value for users. Reach is consistently high at 2,800 but flat, while impressions grow \u2014 a pattern similar to Twitter indicating repeat views. The high save-to-impression ratio is a positive signal for algorithmic amplification and suggests the audience finds the content worth revisiting, which could be leveraged further with how-to or educational content formats."
+      }
+    },
+    "email_insights": {
+      "avg_open_rate": "37.0%",
+      "avg_click_rate": "9.3%",
+      "best_subject_line": "Mock email 1",
+      "insight": "Email performance is exceptionally strong, with an average open rate of 37% significantly exceeding the typical B2C industry benchmark of ~20\u201322%. 'Mock email 1' (sent March 6) outperformed on both open rate (38%) and click rate (9.6%), suggesting mid-week sends may resonate better with this audience. Click-to-open rates hover around 25%, indicating that once opened, emails are effectively driving action. Unsubscribe and bounce rates are minimal (0.4% and 1.0% respectively), reflecting a healthy, well-maintained list."
+    },
+    "recommendations": [
+      "Combat Twitter engagement rate decline by diversifying content formats: introduce polls, short video clips, or threaded storytelling posts to break the monotony of text-only tweets. Set a content rotation schedule ensuring no single format repeats more than twice consecutively within a 7-day window.",
+      "Leverage Instagram's high save rate by leaning into educational, instructional, or checklist-style content that users want to reference later. Introduce Reels to tap into Instagram's algorithmic preference for video, which could expand reach beyond the current flat 2,800 ceiling and attract net-new followers.",
+      "Capitalize on strong email performance by increasing send frequency from the current ~2x per week cadence and testing personalized subject line variables (e.g., first name, benefit-driven copy). Schedule future campaigns on Wednesdays or Thursdays based on the March 6 outperformance, and implement a re-engagement sequence for subscribers who open but do not click to improve the 9.3% average click rate."
+    ],
+    "kpi_summary": {
+      "total_impressions": 27280,
+      "total_engagements": 1553,
+      "avg_engagement_rate": "6.26%",
+      "total_email_sends": 1000,
+      "avg_open_rate": "37.0%"
+    }
+  }
+}
