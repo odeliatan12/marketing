@@ -304,6 +304,83 @@ def generate_mockup_images(mockup_prompts: dict, brand_name: str) -> dict:
     return images
 
 
+# --- Pomelli setup generator ---
+
+def generate_pomelli_setup(brand: dict, product_name: str, description: str, target_audience: str) -> dict:
+    """
+    Generate a Pomelli-ready Business DNA brief from the confirmed brand config.
+    Returns structured fields the user can paste directly into Pomelli's onboarding.
+    """
+    colors = brand.get("colors", {})
+    fonts = brand.get("fonts", {})
+
+    business_description = (
+        f"{product_name} — {description}. "
+        f"{brand.get('elevator_pitch', '')} "
+        f"Target audience: {target_audience}."
+    ).strip()
+
+    tone_summary = ", ".join(brand.get("tone_adjectives", []))
+    values_summary = ", ".join(brand.get("core_values", []))
+    dos = "; ".join(brand.get("voice_dos", []))
+    donts = "; ".join(brand.get("voice_donts", []))
+
+    color_palette = {
+        "primary": colors.get("primary", ""),
+        "secondary": colors.get("secondary", ""),
+        "accent": colors.get("accent", ""),
+        "background": colors.get("background", ""),
+        "text": colors.get("text", ""),
+    }
+
+    return {
+        "pomelli_url": "https://pomelli.com",
+        "step_1_business_info": {
+            "label": "Business / Product Name",
+            "value": brand.get("brand_name", product_name),
+        },
+        "step_2_description": {
+            "label": "What does your business do? (paste into Pomelli's description field)",
+            "value": business_description,
+        },
+        "step_3_tone_of_voice": {
+            "label": "Tone of voice keywords",
+            "value": tone_summary,
+        },
+        "step_4_brand_values": {
+            "label": "Brand values",
+            "value": values_summary,
+        },
+        "step_5_voice_guidelines": {
+            "label": "Voice do's and don'ts",
+            "dos": dos,
+            "donts": donts,
+        },
+        "step_6_color_palette": {
+            "label": "Color palette (hex codes to enter in Pomelli's brand colors)",
+            "colors": color_palette,
+            "rationale": colors.get("rationale", ""),
+        },
+        "step_7_typography": {
+            "label": "Fonts (search these in Pomelli's font selector)",
+            "heading": fonts.get("heading", ""),
+            "body": fonts.get("body", ""),
+        },
+        "step_8_tagline": {
+            "label": "Brand tagline",
+            "value": brand.get("tagline", ""),
+        },
+        "step_9_one_liner": {
+            "label": "One-liner for campaign briefs",
+            "value": brand.get("one_liner", ""),
+        },
+        "step_10_logo_prompt": {
+            "label": "Logo concept (use in Pomelli's image generation or upload your logo)",
+            "value": brand.get("logo_prompt", ""),
+        },
+    }
+
+
 # --- FastAPI routes ---
 
 @router.post("/branding/upload-market-intelligence")
@@ -369,12 +446,18 @@ def confirm_branding(request: BrandConfirmRequest):
         with open(guide_path, "w") as f:
             f.write(brand_guide_md)
 
+        # Generate Pomelli setup brief
+        pomelli_setup = generate_pomelli_setup(
+            brand, request.product_name, brand.get("elevator_pitch", ""), request.target_audience
+        )
+
         print(f"  -> Saved brand_config.json and brand_guide.md ({len(mockup_images)} images generated)")
 
         return {
             "brand_config": brand,
             "brand_guide_preview": brand_guide_md[:500] + "...",
             "mockup_images": mockup_images,   # { key: "/brand-assets/mockups/..." }
+            "pomelli_setup": pomelli_setup,
             "files_saved": [config_path, guide_path],
         }
     except Exception as e:

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   Palette, Type, MessageSquare, Target, Download,
-  AlertCircle, CheckCircle2, Sparkles, Eye, EyeOff, ArrowRight, Upload, Check, Box,
+  AlertCircle, CheckCircle2, Sparkles, Eye, EyeOff, ArrowRight, Upload, Check, Box, ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -62,10 +62,27 @@ interface BrandConfig {
   mockup_prompts?: Record<string, string>;
 }
 
+interface PomelliStep {
+  label: string;
+  value?: string;
+  dos?: string;
+  donts?: string;
+  colors?: Record<string, string>;
+  rationale?: string;
+  heading?: string;
+  body?: string;
+}
+
+interface PomelliSetup {
+  pomelli_url: string;
+  [key: string]: string | PomelliStep;
+}
+
 interface BrandingResult {
   brand_config: BrandConfig;
   brand_guide_preview: string;
   mockup_images?: Record<string, string>;  // { key: "/brand-assets/mockups/..." }
+  pomelli_setup?: PomelliSetup;
 }
 
 // --- Sub-components ---
@@ -204,6 +221,122 @@ function MockupPromptsSection({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function PomelliSection({ setup }: { setup: PomelliSetup }) {
+  const steps = Object.entries(setup).filter(([key]) => key !== "pomelli_url") as [string, PomelliStep][];
+
+  return (
+    <div className="space-y-4">
+      {/* Header banner */}
+      <div className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider opacity-80">Powered by</p>
+          <p className="text-xl font-bold">Google Pomelli</p>
+          <p className="text-xs opacity-75 mt-0.5">AI marketing campaigns — Business DNA setup</p>
+        </div>
+        <a
+          href={setup.pomelli_url as string}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-4 py-2 bg-white text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-50 transition-colors"
+        >
+          Open Pomelli <ExternalLink className="w-3.5 h-3.5" />
+        </a>
+      </div>
+
+      <p className="text-xs text-gray-500">
+        Paste these values into Pomelli's Business DNA setup to instantly configure your brand and start generating on-brand marketing content.
+      </p>
+
+      {/* Steps */}
+      <div className="space-y-3">
+        {steps.map(([key, step]) => {
+          const stepNum = key.match(/\d+/)?.[0];
+          const stepLabel = step.label;
+
+          return (
+            <div key={key} className="border border-gray-200 rounded-xl overflow-hidden">
+              <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-gray-100">
+                {stepNum && (
+                  <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold flex items-center justify-center shrink-0">
+                    {stepNum}
+                  </span>
+                )}
+                <p className="text-xs font-semibold text-gray-700">{stepLabel}</p>
+              </div>
+              <div className="p-3">
+                {/* Plain value */}
+                {step.value && (
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm text-gray-800 leading-relaxed flex-1">{step.value}</p>
+                    <CopyButton text={step.value} />
+                  </div>
+                )}
+
+                {/* Do/Don't */}
+                {(step.dos || step.donts) && (
+                  <div className="space-y-1.5">
+                    {step.dos && (
+                      <div className="flex items-start gap-2">
+                        <span className="text-green-500 font-bold text-xs mt-0.5 shrink-0">Do:</span>
+                        <p className="text-sm text-gray-700">{step.dos}</p>
+                        <CopyButton text={`Do: ${step.dos}\nDon't: ${step.donts ?? ""}`} />
+                      </div>
+                    )}
+                    {step.donts && (
+                      <div className="flex items-start gap-2">
+                        <span className="text-red-400 font-bold text-xs mt-0.5 shrink-0">Don't:</span>
+                        <p className="text-sm text-gray-700">{step.donts}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Color palette */}
+                {step.colors && (
+                  <div className="space-y-2">
+                    <div className="flex gap-2 flex-wrap">
+                      {Object.entries(step.colors).map(([name, hex]) => hex && (
+                        <div key={name} className="flex flex-col items-center gap-1">
+                          <div
+                            className="w-10 h-10 rounded-lg border border-black/10 shadow-sm"
+                            style={{ backgroundColor: hex }}
+                            title={hex}
+                          />
+                          <span className="text-[10px] text-gray-500 capitalize">{name}</span>
+                          <span className="text-[10px] text-gray-400 font-mono">{hex}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-gray-500 italic flex-1">{step.rationale}</p>
+                      <CopyButton text={Object.entries(step.colors ?? {}).map(([k, v]) => `${k}: ${v}`).join(", ")} />
+                    </div>
+                  </div>
+                )}
+
+                {/* Fonts */}
+                {(step.heading || step.body) && (
+                  <div className="flex items-center gap-4">
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Heading</p>
+                      <p className="text-sm font-semibold text-gray-800">{step.heading}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">Body</p>
+                      <p className="text-sm text-gray-700">{step.body}</p>
+                    </div>
+                    <CopyButton text={`Heading: ${step.heading}, Body: ${step.body}`} />
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -728,7 +861,12 @@ export default function BrandingPage() {
                 </Card>
               )}
 
-              {/* Visual Mockups — also show in options result if present */}
+              {/* Pomelli Setup */}
+              {result?.pomelli_setup && (
+                <Card>
+                  <PomelliSection setup={result.pomelli_setup} />
+                </Card>
+              )}
 
               {/* Success + next step */}
               <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 px-3 py-2 rounded-lg">
